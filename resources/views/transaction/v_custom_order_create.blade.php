@@ -22,12 +22,11 @@
             </div>
             <div class="col-7" style="margin-left: auto;"></div>
             <div class="col-3" style="margin-left: auto;">
-                <form action="{{ route('printcoinv') }}" method="POST">
-                @csrf
-                <input type="hidden" name="nocoid" id="nocoid">
-                <button id="print" type="submit" class="btn btn-block bg-gradient-info" formtarget="_blank"><b>
-                <i class="fas fa-print"></i>&nbsp Print Invoice</b></a>
-                </form>
+                <a href={{"/generate-pdf-co/".$datacoheader[0]->IDCO}} target="_blank">
+                    <button id="print" type="submit" class="btn btn-block bg-gradient-info" formtarget="_blank"><b>
+                    <i class="fas fa-print"></i>&nbsp Print Custom Order</b>
+                    </button>
+                </a>
             </div>
         </div>
 

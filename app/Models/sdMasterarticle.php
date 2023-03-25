@@ -21,12 +21,12 @@ class sdMasterarticle extends Model
     public function getArticleAll(){
         return DB::select("SELECT * FROM sd_masterarticles ORDER BY IDArticle");
     }
-    
+
     public function getArticleByType($idtype){
         return DB::select("SELECT a.*, b.path as 'path'
         FROM sd_masterarticles a
         join sd_masterarticleimages b on a.IDArticle = b.IDArticle
-        where  a.IDArticleType =  ".$idtype."  
+        where  a.IDArticleType =  ".$idtype."
         ORDER BY IDArticle");
     }
 
@@ -43,7 +43,7 @@ class sdMasterarticle extends Model
             JOIN (SELECT * FROM sd_mastersuppliers) sup ON sup.id = art.IDSUpplier
             WHERE KodeArticle = '".$kodeart."'");
     }
-    
+
     //Untuk Detail Article di SO
     public function getArticleByCodeSO($kodeart){
         return DB::select("SELECT art.*, img.Path, tp.KodeAwal, tp.NamaJenisArticle FROM sd_masterarticles art LEFT JOIN sd_masterarticleimages img
@@ -80,11 +80,11 @@ class sdMasterarticle extends Model
         try {
             DB::insert("insert into `sd_masterarticles`(`IDArticle`, `IDSupplier`, `IDZAlloc`, `IDArticleType`, `KodeArticle`, `NamaArticle`, `BeratEmas`, `Karat`, `SellingPrice`, `Block`, `Buyback`, `Note`, `created_at`, `updated_at`) VALUES (NULL,'".$req['idsupplier']."','".$req['articleallocation']."','".$req['articletypeid']."','".$nos."','".$req['articlename']."','".$req['articleweight']."','".$req['articlekarat']."','".$req['articlepurchaseprice']."',0, 0, '-','".NOW()."',NULL)");
                 return $nos;
-        } catch(\Illuminate\Database\QueryException  $ex){ 
+        } catch(\Illuminate\Database\QueryException  $ex){
             $nos_model->returnNoTglCancel($req->articletype);
             return 'error';
             // return $ex->getMessage();
-        }  
+        }
     }
 
     protected $fillable = [

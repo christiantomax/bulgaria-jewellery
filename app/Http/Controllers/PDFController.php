@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PDF;
+use App\Models\sdMasterarticle;
 
 class PDFController extends Controller
 {
@@ -31,7 +32,7 @@ class PDFController extends Controller
             $pdf->render();
             return $pdf->stream();
         }else {
-            return "unknown or something went wrong";
+            return "unknown ID or something went wrong";
         }
     }
 
@@ -41,7 +42,6 @@ class PDFController extends Controller
             'title' => 'Welcome to ItSolutionStuff.com',
             'date' => date('m/d/Y')
         ];
-
         // return view('print.TNC');
         $pdf = PDF::loadView('print.TNC', $data)->setPaper('a5', 'landscape');
         $pdf->render();
@@ -49,18 +49,20 @@ class PDFController extends Controller
         return $pdf->download('itsolutionstuff.pdf');
     }
 
-    public function generatePDFCertificate()
+    public function generatePDFCertificate(Request $request)
     {
+        $data = sdMasterarticle::join('sd_masterarticleimages', 'sd_masterarticleimages.IDArticle', '=', 'sd_masterarticles.IDArticle')
+        ->select('sd_masterarticleimages.Path', 'sd_masterarticles.NamaArticle', 'sd_masterarticles.kodeArticle')
+        ->where(".KodeArticle", $request['kodeArticle'])
+        ->get();
         $data = [
-            'title' => 'Welcome to ItSolutionStuff.com',
-            'date' => date('m/d/Y')
+            'data' => $data[0],
         ];
 
         // return view('print.certificate');
         $pdf = PDF::loadView('print.certificate', $data)->setPaper('a5', 'potrait');
         $pdf->render();
         return $pdf->stream();
-        return $pdf->download('itsolutionstuff.pdf');
     }
 
     public function generatePDFCO(Request $request)
@@ -93,7 +95,7 @@ class PDFController extends Controller
             $pdf->render();
             return $pdf->stream();
         }else {
-            return "unknown or something went wrong";
+            return "unknown ID or something went wrong";
         }
     }
 

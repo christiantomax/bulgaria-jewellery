@@ -50,7 +50,7 @@ Route::group(['middleware' => ['auth']],function(){
         Route::get('generate-pdf-so/{kodeSO}', [PDFController::class, 'generatePDFSO']);
         Route::get('generate-pdf-co/{kodeCO}', [PDFController::class, 'generatePDFCO']);
         Route::get('generate-pdf-tnc', [PDFController::class, 'generatePDFTNC']);
-        Route::get('generate-pdf-certificate', [PDFController::class, 'generatePDFCertificate']);
+        Route::get('generate-pdf-certificate/{kodeArticle}', [PDFController::class, 'generatePDFCertificate']);
         //Agenda
         Route::post('/agenda/setup/create', [AgendaController::class, 'createagenda'])->name('createagenda');
         Route::post('/agenda/getdata', [AgendaController::class, 'getagenda'])->name('getagenda');

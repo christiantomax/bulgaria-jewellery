@@ -21,16 +21,15 @@
                     <i class="fa fa-arrow-left"></i>&nbsp Back</b></a>
             </div>
             <div class="col-3" style="margin-left: auto;">
-                <form action="{{ route('printcoinv') }}" method="POST">
-                @csrf
-                <input type="hidden" value="{{$datacoheader[0]->IDCO}}" name="nocoid">    
-                <button id="print" type="submit" class="btn btn-block bg-gradient-info" formtarget="_blank"><b>
-                <i class="fas fa-print"></i>&nbsp Print Invoice</b></a>
-                </form>
+                <a href={{"/generate-pdf-co/".$datacoheader[0]->IDCO}} target="_blank">
+                    <button id="print" type="submit" class="btn btn-block bg-gradient-info" formtarget="_blank"><b>
+                    <i class="fas fa-print"></i>&nbsp Print Custom Order</b>
+                    </button>
+                </a>
             </div>
         </div>
 <br><section class="content">
-    
+
 <div class="row">
 <div class="col-md-12">
 <div class="card elevation-2">
@@ -55,7 +54,7 @@
                     <div class="col-sm-1"></div>
                     <label class="col-sm-4 col-form-label" for="idsupplier">Customer</label>
                         <div class="col-sm-7">
-                             
+
                             <input type="text" class="form-control" id="idsupplier" value="{{$datacoheader[0]->Customer}}" readonly="">
                         </div>
                     </div>
@@ -75,8 +74,8 @@
                     <div class="form-group row">
                     <div class="col-sm-1"></div>
                     <label class="col-sm-4 col-form-label" for="tanggaljatuhtempo">Due Date</label>
-                        <div class="col-sm-7">   
-                            <input type="text" id="tanggaljatuhtempo" class="form-control" value="{{$datacoheader[0]->TglJatuhTempo}}" readonly=""> 
+                        <div class="col-sm-7">
+                            <input type="text" id="tanggaljatuhtempo" class="form-control" value="{{$datacoheader[0]->TglJatuhTempo}}" readonly="">
                         </div>
                     </div>
                 </div>
@@ -95,8 +94,8 @@
                     <div class="form-group row">
                     <div class="col-sm-1"></div>
                     <label class="col-sm-4 col-form-label" for="create-at">Created At</label>
-                        <div class="col-sm-7">   
-                            <input type="text" id="create-at" class="form-control" value="{{$datacoheader[0]->created_at}}" readonly=""> 
+                        <div class="col-sm-7">
+                            <input type="text" id="create-at" class="form-control" value="{{$datacoheader[0]->created_at}}" readonly="">
 
                         </div>
                     </div>
@@ -104,7 +103,7 @@
             </div>
         </div>
 </div>
-    
+
 </div>
 </div>
 </div>
@@ -129,7 +128,7 @@
                 <tbody>
                     @foreach($datacodetail as $row)
                     <tr>
-                        <td>{{ $loop->iteration }}</td> 
+                        <td>{{ $loop->iteration }}</td>
                         <td>{{ $row->HargaFinal }}</td>
                         <td>{{ $row->Size }}</td>
                         <td>{{ $row->Weight }}</td>
@@ -142,7 +141,7 @@
                     </tr>
                     @endforeach
                 </tbody>
-            </table> 
+            </table>
         </div>
     </div>
 
@@ -171,7 +170,7 @@
 @endsection
 
 @section('js')
-<script> 
+<script>
 
         var datapost = {};
         var counter = 0;
@@ -186,7 +185,7 @@
             "autoWidth": false,
             "responsive": true,
         });
-        
+
         $('#addRow').on( 'click', function () {
             if (fileValidation() && showaddnewarticleDetail()) {
                 var e = document.getElementById("articleallocation");
@@ -207,7 +206,7 @@
                 adddatapost(strArticleType, strAllocation);
                 counter++;
             }
-            
+
         } );
     } );
 
@@ -245,7 +244,7 @@
         var tempcounter = 0;
         var tempdatapost = {};
         for (var i = 0; i < counter; i++) {
-            if (datapost[i]['articlename'] != null) {                
+            if (datapost[i]['articlename'] != null) {
                 t.row.add( [
                     (i+1),
                     datapost[i]['articlename'],
@@ -264,7 +263,7 @@
             }
         }
         datapost = tempdatapost;
-        counter--;    
+        counter--;
         console.log(datapost);
     }
 
@@ -288,7 +287,7 @@
             document.getElementById('addnewarticle').style.visibility = 'hidden';
             document.getElementById('purchaseorderheader').remove();
             document.getElementById('simpanpo').style.visibility = 'visible';
-            
+
             $('#idsupplier').prop('disabled', true);
             $('#exchangerate').prop('readonly', true);
 
@@ -312,9 +311,9 @@
     function postData(){
         $("#post_submit").attr("disabled", true);
         $("#submit").attr("disabled", true);
-        
+
         for (var i = 0; i < counter; i++) {
-            var fd = new FormData();    
+            var fd = new FormData();
             fd.append("idsupplier", $('#idsupplier').val());
             fd.append("idpo", $('#idpo').val());
             fd.append("tanggaljatuhtempo", $('#tanggaljatuhtempo').val());
@@ -366,7 +365,7 @@
                     }
                }
             });
-        } 
+        }
 
         //post agenda
         if($('#tanggaljatuhtempo').val() != ""){
@@ -387,9 +386,9 @@
                 },
                 success:function(data){
                 },
-                error: function(XMLHttpRequest, textStatus, errorThrown) { 
-                    alert("Error: " + errorThrown); 
-                } 
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert("Error: " + errorThrown);
+                }
             });
         }
     }
@@ -399,22 +398,22 @@
     }
 
     function fileValidation() {
-        var fileInput = 
+        var fileInput =
             document.getElementById('file');
-          
+
         var filePath = fileInput.value;
-      
+
         // Allowing file type
-        var allowedExtensions = 
+        var allowedExtensions =
                 /(\.jpg|\.jpeg|\.png|\.gif)$/i;
-          
+
         if (!allowedExtensions.exec(filePath)) {
             $('#error-msg').html('Please check your article image');
             $('#create-error').modal('show');
             fileInput.value = null;
             return false;
-        } 
-        else 
+        }
+        else
         {
             return true;
         }

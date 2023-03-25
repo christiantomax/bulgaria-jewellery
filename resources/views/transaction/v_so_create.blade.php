@@ -10,7 +10,7 @@
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1><b>Create Sales Order</b></h1>
-            </div>    
+            </div>
             <div class="col-sm-6" style="display: flex; align-items: center;">
                 <div style="margin-left: auto;"><b><i>{{ $tanggal }}</i></b></div>
             </div>
@@ -32,7 +32,7 @@
             <div class="col-3" style="margin-left: auto;">
                 <form action="{{ route('printInv') }}" method="POST">
                 @csrf
-                <input type="hidden" name="nosoinv" id="nosoinv">    
+                <input type="hidden" name="nosoinv" id="nosoinv">
                 <button id="print" type="submit" class="btn btn-block bg-gradient-info" formtarget="_blank"><b>
                 <i class="fas fa-print"></i>&nbsp Print Invoice</b></a>
                 </form>
@@ -118,7 +118,7 @@
     <div class="card-body">
         <div class="form-group row">
             <label class="col-sm-2 col-form-label" for="customer">Customer</label>
-            
+
             <div class="col-sm-8 col-8">
                 <select class="form-control select2bs4" id="customer" style="width : 100%;">
                         <option value="null">-- Select Customer --</option>
@@ -127,7 +127,7 @@
                     @endforeach
                 </select>
             </div>
-            
+
             <div class="col-sm-2 col-2">
                 <a href="/customer/setup" class="btn btn-block btn-success"><b>+</b></a>
             </div>
@@ -330,7 +330,7 @@
 @endsection
 
 @section('js')
-<script> 
+<script>
     $( document ).ready(function() {
         document.getElementById("sertif").style.display = "none";
         document.getElementById("print").style.display = "none";
@@ -439,7 +439,7 @@
         }else{
             $('#m-customer').html(': '+ $("#customer :selected").text() +
                 '<br>&nbsp'+ $('#alamat').val());
-            $('#m-article').html(': '+ $("#artname").html() + '&nbsp(' + $('#berat').html() 
+            $('#m-article').html(': '+ $("#artname").html() + '&nbsp(' + $('#berat').html()
                 + ')<br>&nbsp'+ $('#karat').html());
             $('#m-image').attr('src', $('#img-preview').attr('src'));
             $('#m-hargafinal').html('Total : <b>'+ rupiah($('#hargafinal').val()) +'</b>');
@@ -493,6 +493,7 @@
                     $('#error-msg').html('Item location invalid...');
                     $('#create-error').modal('show');
                 }else{
+                    window.location.href = "/transaction/sales/update/"+data;
                     document.getElementById("sertif").style.display = "block";
                     document.getElementById("print").style.display = "block";
 

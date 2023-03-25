@@ -12,26 +12,26 @@ class sdTrxso extends Model
     use HasFactory;
 
     public function getSOByID($id){
-        return DB::select("SELECT so.*, DATE_FORMAT(so.TanggalSO, '%d/%m/%Y') SODate, img.Path, 
+        return DB::select("SELECT so.*, DATE_FORMAT(so.TanggalSO, '%d/%m/%Y') SODate, img.Path,
                 c.Nama NamaCustomer, c.Telepon, c.Telepon2, c.Email, c.Alamat, DATE_FORMAT(c.TanggalLahir, '%d/%m/%Y') TanggalLahir
-                FROM sd_trxsos so JOIN sd_masterarticleimages img ON so.IDArticle = img.IDArticle 
-                JOIN (SELECT * FROM sd_mastercustomers WHERE updated_at is NULL) c 
-                ON c.IDCustomer = so.IDCustomer WHERE IDSO = ".$id);
+                FROM sd_trxsos so JOIN sd_masterarticleimages img ON so.IDArticle = img.IDArticle
+                JOIN (SELECT * FROM sd_mastercustomers WHERE updated_at is NULL) c
+                ON c.IDCustomer = so.IDCustomer WHERE ".(is_numeric($id) ? "IDSO" : "KodeSO")." = '".$id."'");
     }
 
     // Untuk BuyBack
     public function getSOByKode($kode){
-        return DB::select("SELECT so.*, DATE_FORMAT(so.TanggalSO, '%d/%m/%Y') SODate, img.Path, 
+        return DB::select("SELECT so.*, DATE_FORMAT(so.TanggalSO, '%d/%m/%Y') SODate, img.Path,
                 c.Nama NamaCustomer, c.Telepon, c.Telepon2, c.Email, c.Alamat, DATE_FORMAT(c.TanggalLahir, '%d/%m/%Y') TanggalLahir
-                FROM sd_trxsos so JOIN sd_masterarticleimages img ON so.IDArticle = img.IDArticle 
-                JOIN (SELECT * FROM sd_mastercustomers WHERE updated_at is NULL) c 
-                ON c.IDCustomer = so.IDCustomer 
+                FROM sd_trxsos so JOIN sd_masterarticleimages img ON so.IDArticle = img.IDArticle
+                JOIN (SELECT * FROM sd_mastercustomers WHERE updated_at is NULL) c
+                ON c.IDCustomer = so.IDCustomer
                 WHERE so.KodeSO = '".$kode."' AND so.Status = 1");
     }
 
     public function getSOFilter($sono, $sodate1, $sodate2, $customer, $creator, $updater, $status, $article){
         $qry = "SELECT so.*, DATE_FORMAT(so.TanggalSO, '%d/%m/%Y') SODate, c.Nama NamaCustomer FROM sd_trxsos so JOIN (SELECT * FROM sd_mastercustomers WHERE updated_at is NULL) c ON c.IDCustomer = so.IDCustomer ";
-        
+
         if($sono != '')
             return DB::select($qry."WHERE so.KodeSO = '".$sono."'");
 
@@ -39,11 +39,11 @@ class sdTrxso extends Model
             $sodate1 = date_format(date_create_from_format('d/m/Y', $sodate1),"Y-m-d");
             if($sodate2 != ''){
                 $sodate2 = date_format(date_create_from_format('d/m/Y',$sodate2),"Y-m-d");
-                
+
                 $qry = $qry."WHERE so.TanggalSO BETWEEN '".$sodate1."' AND '".$sodate2."' ";
             }else
                 $qry = $qry."WHERE so.TanggalSO = '".$sodate1."' ";
-            
+
             if($customer != '')
                 $qry = $qry." AND c.Nama LIKE '%".$customer."%' ";
             if($creator != 'null')
@@ -56,7 +56,7 @@ class sdTrxso extends Model
             // Untuk kasih cek perlu pake WHERE ga
             if($customer != '' || $article != '' || $creator != "null" || $updater != "null" || $status != 'null')
                 $qry = $qry." WHERE ";
-            
+
             if($customer != '')
                 $qry = $qry." c.Nama LIKE '%".$customer."%' ";
             if($creator != 'null'){
@@ -92,10 +92,10 @@ class sdTrxso extends Model
         $allocModel = new sdMasterzalloc;
         $mutModel = new sdMutation;
         $datart = DB::select("SELECT art.*, so.KodeSO FROM sd_masterarticles art JOIN sd_trxsos so ON art.IDArticle = so.IDArticle
-                            WHERE so.IDSO = ".$req['idso']);
+                            WHERE ".(is_numeric($req['idso']) ? "so.IDSO" : "so.KodeSO")." = '".$req['idso']."'");
 
         // Cek kalau msh ada buyback aktif nya, ga bisa dideactive
-        $dataso = DB::select("SELECT * FROM sd_trxsos so WHERE IDSO = ".$req['idso']);
+        $dataso = DB::select("SELECT * FROM sd_trxsos so WHERE IDSO = '".$req['idso']."' OR so.KodeSO = '".$req['idso']."'");
         if($dataso[0]->KodeBB != '')
             return 'bb';
         if($datart[0]->IDZAlloc != 4)
@@ -103,19 +103,20 @@ class sdTrxso extends Model
 
         try {
             $this::where('IDSO', $req['idso'])
-                    ->update([
-                        'Status' => 0,
-                        'IDUserUpdater' => Auth::user()->id,
-                        'NamaUserUpdater' => Auth::user()->NamaUser,
-                        'updated_at' => NOW(),
-                    ]);
+            ->orWhere('KodeSO', $req['idso'])
+            ->update([
+                'Status' => 0,
+                'IDUserUpdater' => Auth::user()->id,
+                'NamaUserUpdater' => Auth::user()->NamaUser,
+                'updated_at' => NOW(),
+            ]);
             $from = $allocModel->getTypeByID($datart[0]->IDZAlloc);
             $to = $allocModel->getTypeByID(2);
             $mutModel->createMutation($datart[0]->KodeSO, $datart[0]->IDArticle, $datart[0]->KodeArticle, $datart[0]->NamaArticle,
                     $from[0]->IDZAlloc, $from[0]->KodeAlloc.' - '.$from[0]->NamaAlloc,
                     $to[0]->IDZAlloc, $to[0]->KodeAlloc.' - '.$to[0]->NamaAlloc, 'Deactive SO');
             return 'berhasil';
-        } catch(\Illuminate\Database\QueryException $ex){ 
+        } catch(\Illuminate\Database\QueryException $ex){
             return 'error';
         }
     }
@@ -125,7 +126,7 @@ class sdTrxso extends Model
         $nos_model = new sdNoseries;
         $allocModel = new sdMasterzalloc;
         $mutModel = new sdMutation;
-    
+
         $datart =  $artModel->getArticleByCode($req['idart']);
 
         if($datart[0]->IDZAlloc != 2)
@@ -140,9 +141,9 @@ class sdTrxso extends Model
 
         $nos = '';
         $sodate = date_format(date_create_from_format('d/m/Y', $req['sodate']),"Y-m-d");
-        
+
         $nos = $nos_model->returnNoSo('S',$sodate,'Sales Order');
-        
+
         try {
             $this::create([
                 'KodeSO' => $nos,
@@ -164,7 +165,7 @@ class sdTrxso extends Model
                 'Status' => 1,
             ]);
             $nos_model->returnNoSoUpdate('S',$sodate);
-            
+
             $from = $allocModel->getTypeByID($datart[0]->IDZAlloc);
             $to = $allocModel->getTypeByID(4);
             $mutModel->createMutation($nos, $datart[0]->IDArticle, $datart[0]->KodeArticle, $datart[0]->NamaArticle,
@@ -172,7 +173,7 @@ class sdTrxso extends Model
                     $to[0]->IDZAlloc, $to[0]->KodeAlloc.' - '.$to[0]->NamaAlloc, $req['note']);
 
             return $nos;
-        } catch(\Illuminate\Database\QueryException $ex){ 
+        } catch(\Illuminate\Database\QueryException $ex){
             return 'error';
         }
     }
@@ -187,7 +188,7 @@ class sdTrxso extends Model
     public function cekGL($date1, $date2){
         $date1 = date_format(date_create($date1),"Y-m-d");
         $date2 = date_format(date_create($date2),"Y-m-d");
-        
+
         return DB::select("SELECT 'so' as Tipe, so.IDSO IDDoc, so.KodeSO KodeDoc, DATE_FORMAT(so.TanggalSO, '%d/%m/%Y') TanggalDoc, so.IDArticle,
         so.KodeArticle, so.NamaArticle, so.BeratEmas, so.Karat, so.Harga, so.HargaFinal,
         c.IDCustomer, c.Nama as NamaCust
