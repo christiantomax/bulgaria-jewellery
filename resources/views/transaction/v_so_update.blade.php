@@ -10,7 +10,7 @@
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1><b>Sales Order Details</b></h1>
-            </div>
+            </div>    
             <div class="col-sm-6" style="display: flex; align-items: center;">
                 <div style="margin-left: auto;"><b><i>{{ $tanggal }}</i></b></div>
                 <input type="hidden" id="idso" value="{{ $dataso->IDSO }}">
@@ -21,28 +21,23 @@
                 <a href="/transaction/sales" class="btn btn-block btn-success"><b>
                     <i class="fa fa-arrow-left"></i>&nbsp Back</b></a>
             </div>
-            <div class="col-1"></div>
+            <div class="col-4"></div>
             @if($dataso->Status == 1)
             <div class="col-3" style="margin-left: auto;">
-                <a href={{"/generate-pdf-tnc/"}} target="_blank">
-                    <button id="print" type="submit" class="btn btn-block bg-gradient-primary" formtarget="_blank"><b>
-                    <i class="fas fa-print"></i>&nbsp Print Term And Condition</b>
-                    </button>
-                </a>
+                <form action="{{ route('printSertif') }}" method="POST">
+                @csrf
+                <input type="hidden" name="nososertif" id="nososertif" value="{{ $dataso->KodeSO }}">
+                <button id="sertif" type="submit" class="btn btn-block btn-warning" formtarget="_blank"><b>
+                <i class="far fa-file"></i>&nbsp Print Certificate</b></button>
+                </form>
             </div>
             <div class="col-3" style="margin-left: auto;">
-                <a href={{"/generate-pdf-certificate/".$dataso->KodeArticle }} target="_blank">
-                    <button id="print" type="submit" class="btn btn-block bg-gradient-warning" formtarget="_blank"><b>
-                    <i class="fas fa-print"></i>&nbsp Print Certificate</b>
-                    </button>
-                </a>
-            </div>
-            <div class="col-3" style="margin-left: auto;">
-                <a href={{"/generate-pdf-so/".$dataso->KodeSO}} target="_blank">
-                    <button id="print" type="submit" class="btn btn-block bg-gradient-info" formtarget="_blank"><b>
-                    <i class="fas fa-print"></i>&nbsp Print Invoice</b>
-                    </button>
-                </a>
+                <form action="{{ route('printInv') }}" method="POST">
+                @csrf
+                <input type="hidden" name="nosoinv" id="nosoinv" value="{{ $dataso->KodeSO }}">    
+                <button id="print" type="submit" class="btn btn-block bg-gradient-info" formtarget="_blank"><b>
+                <i class="fas fa-print"></i>&nbsp Print Invoice</b></button>
+                </form>
             </div>
             @endif
         </div>
@@ -306,7 +301,7 @@
 @endsection
 
 @section('js')
-<script>
+<script> 
     $( document ).ready(function() {
         $('#hargafinal').html(rupiah( $('#hargafinal').html() ));
     });

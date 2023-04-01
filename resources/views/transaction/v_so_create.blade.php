@@ -22,20 +22,18 @@
             </div>
             <div class="col-4"></div>
             <div class="col-3" style="margin-left: auto;">
-                <form action="{{ route('printSertif') }}" method="POST">
-                @csrf
-                <input type="hidden" name="nososertif" id="nososertif">
-                <button id="sertif" type="submit" class="btn btn-block btn-warning" formtarget="_blank"><b>
-                <i class="far fa-file"></i>&nbsp Print Certificate</b></a>
-                </form>
+                <a href={{"/generate-pdf-co/".$datacoheader[0]->IDSO}}>
+                    <button id="print" type="submit" class="btn btn-block bg-gradient-info" formtarget="_blank"><b>
+                    <i class="fas fa-print"></i>&nbsp Print Certificate</b>
+                    </button>
+                </a>
             </div>
             <div class="col-3" style="margin-left: auto;">
-                <form action="{{ route('printInv') }}" method="POST">
-                @csrf
-                <input type="hidden" name="nosoinv" id="nosoinv">
-                <button id="print" type="submit" class="btn btn-block bg-gradient-info" formtarget="_blank"><b>
-                <i class="fas fa-print"></i>&nbsp Print Invoice</b></a>
-                </form>
+                <a href={{"/generate-pdf-co/".$datacoheader[0]->IDSO}}>
+                    <button id="print" type="submit" class="btn btn-block bg-gradient-info" formtarget="_blank"><b>
+                    <i class="fas fa-print"></i>&nbsp Print Invoice</b>
+                    </button>
+                </a>
             </div>
         </div>
 
@@ -493,7 +491,6 @@
                     $('#error-msg').html('Item location invalid...');
                     $('#create-error').modal('show');
                 }else{
-                    window.location.href = "/transaction/sales/update/"+data;
                     document.getElementById("sertif").style.display = "block";
                     document.getElementById("print").style.display = "block";
 

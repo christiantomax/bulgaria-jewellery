@@ -23,7 +23,7 @@
             <div class="col-3" style="margin-left: auto;">
                 <a href={{"/generate-pdf-co/".$datacoheader[0]->IDCO}} target="_blank">
                     <button id="print" type="submit" class="btn btn-block bg-gradient-info" formtarget="_blank"><b>
-                    <i class="fas fa-print"></i>&nbsp Print Custom Order</b>
+                    <i class="fas fa-print"></i>&nbsp Print Invoice</b>
                     </button>
                 </a>
             </div>

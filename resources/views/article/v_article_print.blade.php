@@ -35,7 +35,7 @@
     <!-- Select2 -->
     <link rel="stylesheet" href="{{ asset('template/plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('template/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-  
+
     <!-- jQuery -->
     <script src="{{ asset('template/plugins/jquery/jquery.min.js') }}"></script>
     <!-- jQuery UI 1.11.4 -->
@@ -94,13 +94,13 @@
 <div class="row" style="height: 75vh;">
 	<div class="col-3"></div>
 	<div class="col-2" style="text-align: center; margin-left: 3.1%;">
-		<img src="data:image/png;base64,{{DNS1D::getBarcodePNG($article->KodeArticle, 'C128')}}" 
+		<img src="data:image/png;base64,{{DNS1D::getBarcodePNG($article->KodeArticle, 'C128')}}"
                     style="width: 38vw; height: 35vh;" alt="barcode"/>
 		<br><b style="font-size: 15vh;">{{ $article->KodeArticle }}</b>
 		<br><div class="row">
 			<div class="col-6">
 				<b style="font-size: 12vh;">{{ $article->Kode }}</b>
-				
+
 			</div>
 			<div class="col-6">
 				<b style="font-size: 12vh;">{{ $article->KodeAwal }}</b><br>
@@ -119,8 +119,8 @@
 <div class="row">
 	<div class="col-3"></div>
 	<div class="col-2" style="margin-left: 1.2%; float: right;">
-		<b style="font-size: 11vh; float: right;">{{ $article->BeratEmas }} Gr.</b><br> 
-		<b style="font-size: 14vh;  float: right;" id="harga">{{ $article->SellingPrice * 178 }}</b><br>
+		<b style="font-size: 11vh; float: right;">{{ $article->BeratEmas }} Gr.</b><br>
+		<b style="font-size: 14vh;  float: right;" id="harga">VX{{ $article->SellingPrice * 178 }}</b><br>
 		@if($article->Buyback == 1)
 			<div class="square"></div>
 		@endif
@@ -145,7 +145,7 @@
 			karathtml = karathtml + karat[i] + '<br>';
 	}
 	$('#karat').html(karathtml);
-	
+
         var harga = $('#harga').html();
         $('#harga').html('<b>'+ harga +'</b>');
         window.addEventListener("load", window.print());

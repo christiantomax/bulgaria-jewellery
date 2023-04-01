@@ -22,9 +22,9 @@
             </div>
             <div class="col-7" style="margin-left: auto;"></div>
             <div class="col-3" style="margin-left: auto;">
-                <a href={{"/generate-pdf-co/".$datacoheader[0]->IDCO}} target="_blank">
+                <a href={{"/generate-pdf-co/".$idco}} target="_blank">
                     <button id="print" type="submit" class="btn btn-block bg-gradient-info" formtarget="_blank"><b>
-                    <i class="fas fa-print"></i>&nbsp Print Custom Order</b>
+                    <i class="fas fa-print"></i>&nbsp Print Invoice</b>
                     </button>
                 </a>
             </div>
@@ -604,7 +604,7 @@
 
     function checkmax() {
 
-        if (counter > 1) {
+        if (counter >= 1) {
             $('#error-msg').html('maximum of data 1');
             $('#create-error').modal('show');
             fileInput.value = null;

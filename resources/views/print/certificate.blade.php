@@ -82,7 +82,7 @@
                 <img src="{{ public_path('/storage/uploads/images/frame-piece-bottom-right.jpg') }}" style="bottom:-700px; right: 0;height: 100px; position: absolute; z-index: -1;">
                 <img src="{{ public_path('/storage/uploads/images/frame-piece-bottom-left.jpg') }}" style="left: 2px; bottom: -700px; height: 100px; position: absolute; z-index: -1;">
                 <div style="width: 100%; display:flex; justify-content: center; text-align: center; z-index:;">
-                    <img src="{{ public_path($data->Path) }}" style="height: 180px; margin: 35px 0px;">
+                    <img src="{{ public_path('/storage/uploads/images/dummy-product.jpg') }}" style="height: 180px; margin: 35px 0px;">
                 </div>
                 <div style="width: 100%; display:flex; justify-content: start; text-align: left;">
                     <p class="gold" style="font-weight: 700; font-size: 17px; text-align: left; margin: 0 0 0 0; padding: 0 0 0 0;">Clarity Grade</p>
