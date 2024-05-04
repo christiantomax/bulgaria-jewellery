@@ -66,7 +66,7 @@
                 <div style="margin-top: -20px;">
                     <p style="margin-bottom: 3px;">To : {{$data->Nama}} / {{$data->Telepon}}</p>
                     <p style="margin-bottom: 3px; margin-top: 0px;">Invoice ID &nbsp;: {{$data->KodeSO}}</p>
-                    <p style="margin-top: 0px;">Issue Date : {{$data->created_at}}</p>
+                    <p style="margin-top: 0px;">Issue Date : {{$tanggal}}</p>
                 </div>
             </th>
         </tr>

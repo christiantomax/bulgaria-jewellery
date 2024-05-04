@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\sdMasterzalloc;
 use App\Models\sdMasterarticle;
+use App\Models\sdMasterarticleimage;
 use Carbon\Carbon;
 
 class StorageController extends Controller
@@ -15,8 +16,8 @@ class StorageController extends Controller
         $datatype = [
             'datatype' => $allocModel->getType(),
             'tanggal' => Carbon::now()->isoFormat('dddd, D MMM Y'),
-            'summary' => $allocModel->getSummary("all"),
-            'article' => $artModel->getArticleByAlloc("all"),
+            'summary' => $allocModel->getSummary("2"),
+            'article' => $artModel->getArticleByAlloc("2"),
             'post' => '', 
         ];
         return view('article/v_storage', $datatype);

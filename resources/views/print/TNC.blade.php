@@ -37,13 +37,13 @@
             padding: 2px 3px;
             height: 15px;
             display: inline-block;
-            background: #D3D3D3;
+            background: #808080 ;
             border: 1px solid transparent;
             transform: skewX(-20deg);
         }
 
         .grey *, .grey{
-            background: #D3D3D3;
+            background: #808080 ;
             color: #FFF;
         }
         .background-overlay{

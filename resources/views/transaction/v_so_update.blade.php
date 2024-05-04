@@ -10,7 +10,7 @@
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1><b>Sales Order Details</b></h1>
-            </div>    
+            </div>
             <div class="col-sm-6" style="display: flex; align-items: center;">
                 <div style="margin-left: auto;"><b><i>{{ $tanggal }}</i></b></div>
                 <input type="hidden" id="idso" value="{{ $dataso->IDSO }}">
@@ -23,21 +23,26 @@
             </div>
             <div class="col-4"></div>
             @if($dataso->Status == 1)
+            {{-- <div class="col-3" style="margin-left: auto;">
+                <a href={{'/generate-pdf-tnc/'}} target="_blank">
+                    <button id="sertif" class="btn btn-block btn-primary">
+                        <i class="fas fa-print"></i>&nbsp Print Term and Condition</b>
+                    </button>
+                </a>
+            </div> --}}
             <div class="col-3" style="margin-left: auto;">
-                <form action="{{ route('printSertif') }}" method="POST">
-                @csrf
-                <input type="hidden" name="nososertif" id="nososertif" value="{{ $dataso->KodeSO }}">
-                <button id="sertif" type="submit" class="btn btn-block btn-warning" formtarget="_blank"><b>
-                <i class="far fa-file"></i>&nbsp Print Certificate</b></button>
-                </form>
+                <a href={{'/generate-pdf-certificate/'.$dataso->KodeSO}} target="_blank">
+                    <button id="sertif" class="btn btn-block btn-warning">
+                        <b><i class="fas fa-print"></i>&nbsp Print Certificate</b>
+                    </button>
+                </a>
             </div>
             <div class="col-3" style="margin-left: auto;">
-                <form action="{{ route('printInv') }}" method="POST">
-                @csrf
-                <input type="hidden" name="nosoinv" id="nosoinv" value="{{ $dataso->KodeSO }}">    
-                <button id="print" type="submit" class="btn btn-block bg-gradient-info" formtarget="_blank"><b>
-                <i class="fas fa-print"></i>&nbsp Print Invoice</b></button>
-                </form>
+                <a href={{'/generate-pdf-so/'.$dataso->KodeSO}} target="_blank">
+                    <button id="sertif" class="btn btn-block bg-gradient-info">
+                        <b><i class="fas fa-print"></i>&nbsp Print Invoice</b></button>
+                    </button>
+                </a>
             </div>
             @endif
         </div>
@@ -224,7 +229,7 @@
                 <div class="col-7"></div>
                 <div class="col-5">
                     @if($dataso->Status == 1 && Auth::user()->IDLevel != 3)
-                        <button id="submit" onclick="validate()" class="btn btn-block btn-danger"><b>Deactive</b></button>
+                        <button id="submit" onclick="validate()" class="btn btn-block btn-danger"><b>Void SO</b></button>
                     @endif
                 </div>
             </div>
@@ -239,13 +244,14 @@
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Validate</h4>
+                    <h4 class="modal-title">Void SO</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    Are you sure want to update this data?
+                    {{-- Are you sure want to update this data? --}}
+                    Are you sure want Void this SO?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal"><b>Cancel</b></button>
@@ -301,7 +307,7 @@
 @endsection
 
 @section('js')
-<script> 
+<script>
     $( document ).ready(function() {
         $('#hargafinal').html(rupiah( $('#hargafinal').html() ));
     });

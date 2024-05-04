@@ -46,11 +46,12 @@ Route::group(['middleware' => ['auth']],function(){
     Route::get('/changepass', [LoginController::class, 'changepass']);
     Route::post('/changepass/post', [LoginController::class, 'changepasspost'])->name('changepasspost');
 
+    Route::get('generate-pdf-so/{kodeSO}', [PDFController::class, 'generatePDFSO']);
+    Route::get('generate-pdf-co/{kodeCO}', [PDFController::class, 'generatePDFCO']);
+    Route::get('generate-pdf-tnc', [PDFController::class, 'generatePDFTNC']);
+    Route::get('generate-pdf-certificate/{kodeSO}', [PDFController::class, 'generatePDFCertificate']);
+
     Route::group(['middleware' => ['levelSuper']],function(){
-        Route::get('generate-pdf-so/{kodeSO}', [PDFController::class, 'generatePDFSO']);
-        Route::get('generate-pdf-co/{kodeCO}', [PDFController::class, 'generatePDFCO']);
-        Route::get('generate-pdf-tnc', [PDFController::class, 'generatePDFTNC']);
-        Route::get('generate-pdf-certificate/{kodeArticle}', [PDFController::class, 'generatePDFCertificate']);
         //Agenda
         Route::post('/agenda/setup/create', [AgendaController::class, 'createagenda'])->name('createagenda');
         Route::post('/agenda/getdata', [AgendaController::class, 'getagenda'])->name('getagenda');

@@ -42,12 +42,19 @@ class sdNoseries extends Model
                     .str_pad($datanos[0]->Urutan+1,5,"0",STR_PAD_LEFT);
             return $nos;
         }else{
-            $tanggalawal = substr($tanggal,0,8).'01';
+            // $tanggalawal = substr($tanggal,0,8).'01';
+            // $keterangan = $keterangan." ".substr($tanggal,0,4)." ".substr($tanggal,5,2);
+            
+            // // Create record baru kalau ga ada lalu rekursi supaya masuk dalam scope if
+            // DB::insert("INSERT INTO `sd_noseries`(`IDNos`, `KodeToko`, `KodeNos`, `Urutan`, `Keterangan`, `TanggalMulai`, `TanggalAkhir`, `created_at`, `updated_at`) VALUES 
+            //     (NULL,'01',?,0,?,?,LAST_DAY(?),NOW(),NOW())",[$kode, $keterangan, $tanggalawal, $tanggal]);
+
+            // Update 2023
             $keterangan = $keterangan." ".substr($tanggal,0,4)." ".substr($tanggal,5,2);
             
             // Create record baru kalau ga ada lalu rekursi supaya masuk dalam scope if
             DB::insert("INSERT INTO `sd_noseries`(`IDNos`, `KodeToko`, `KodeNos`, `Urutan`, `Keterangan`, `TanggalMulai`, `TanggalAkhir`, `created_at`, `updated_at`) VALUES 
-                (NULL,'01',?,0,?,?,LAST_DAY(?),NOW(),NOW())",[$kode, $keterangan, $tanggalawal, $tanggal]);
+                (NULL,'01',?,0,?,?,?,NOW(),NOW())",[$kode, $keterangan, $tanggal, $tanggal]);
             return $this->returnNoSo($kode, $tanggal, $keterangan);
         }
     }

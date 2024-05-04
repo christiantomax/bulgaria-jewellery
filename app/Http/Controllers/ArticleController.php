@@ -7,7 +7,10 @@ use App\Models\sdArticletype;
 use App\Models\sdMasterarticle;
 use App\Models\sdMasterarticleimage;
 use App\Models\sdMasterzalloc;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use PDF;
+use Dompdf\Options;
 
 class ArticleController extends Controller
 {
@@ -88,6 +91,9 @@ class ArticleController extends Controller
                 'datart' => $datart[0],
                 'datartype' => $datartype,
                 'datalloc' => $dataralloc,
+                'datapo' => DB::select("SELECT a.*, po.KodeBarangSupplier FROM sd_masterarticles a
+                                    LEFT JOIN sd_trxpos po ON a.IDArticle = po.IDArticle
+                                    WHERE a.KodeArticle = '".$kodeart."' "),
                 'tanggal' => Carbon::now()->isoFormat('dddd, D MMM Y'),
             ];
             return view('article/v_article_update', $data);
@@ -105,6 +111,7 @@ class ArticleController extends Controller
                 $imagePath = $req->file('file');
                 $imageName = $req->kode.".".$imagePath->extension();
                 $path = $req->file('file')->storeAs('uploads/purchaseorder', $req->kode.".".$imagePath->extension(), 'public');
+                $this->correctImageOrientation(storage_path('app/public/uploads/purchaseorder/'.$imageName));
                 $artImageModel->articleImage($req->id, $imageName, '/storage/'.$path);
             }
             else{
@@ -123,6 +130,41 @@ class ArticleController extends Controller
         $data = [
             'article' => $datart[0],
         ];
-        return view('article/v_article_print', $data);
+        
+        $pdf = PDF::loadView('print.article', $data)->setPaper(array(0,0,85.0394,212.598), 'landscape');
+        $pdf->render();
+        return $pdf->stream();
+        // return view('print.article', $data);
+        // return asset("template/dist/css/arial.TTF");
+        // return view('article/v_article_print', $data);
+    }
+
+    function correctImageOrientation($filename) {
+        if (function_exists('exif_read_data')) {
+            $exif = exif_read_data($filename);
+            if($exif && isset($exif['Orientation'])) {
+            $orientation = $exif['Orientation'];
+            if($orientation != 1){
+                $img = imagecreatefromjpeg($filename);
+                $deg = 0;
+                switch ($orientation) {
+                case 3:
+                    $deg = 180;
+                    break;
+                case 6:
+                    $deg = 270;
+                    break;
+                case 8:
+                    $deg = 90;
+                    break;
+                }
+                if ($deg) {
+                $img = imagerotate($img, $deg, 0);        
+                }
+                // then rewrite the rotated image back to the disk as $filename 
+                imagejpeg($img, $filename, 95);
+            } // if there is some rotation necessary
+            } // if have the exif orientation info
+        } // if function exists      
     }
 }

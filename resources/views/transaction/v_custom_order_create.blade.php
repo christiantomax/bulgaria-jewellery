@@ -90,17 +90,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-6">
-                </div>
-                <div class="col-sm-6">
-                    <div class="form-group row">
-                    <div class="col-sm-1"></div>
-                    <label class="col-sm-4 col-form-label" for="downpayment">Downpayment</label>
-                        <div class="col-sm-7">
-                            <input type="number" min="0" value="0" class="form-control" id="downpayment" placeholder="Downpayment">
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div class="row" id="customorderheader">
@@ -123,9 +112,9 @@
                 <div class="row form-horizontal">
                     <div class="col-sm-6">
                         <div class="form-group row">
-                        <label class="col-sm-4 col-form-label" for="customorderHargaFinal">Harga<a style="color:red;">*</a></label>
+                        <label class="col-sm-4 col-form-label" for="customorderHargaFinal">Image<a style="color:red;">*</a></label>
                             <div class="col-sm-7">
-                            <input type="text" class="form-control" id="customorderHargaFinal" value="0" placeholder="(Rp.)">
+                                <input type="file" id="file" onchange="fileValidation()" class="form-control" >
                             </div>
                         </div>
                     </div>
@@ -187,11 +176,11 @@
                         </div>
                     </div>
                     <div class="col-sm-6">
-                    <div class="form-group row">
-                        <div class="col-sm-1"></div>
-                        <label class="col-sm-4 col-form-label" for="customorderNote">Note<a style="color:red;">*</a></label>
+                        <div class="form-group row">
+                            <div class="col-sm-1"></div>
+                            <label class="col-sm-4 col-form-label" for="customorderHargaFinal">Harga<a style="color:red;">*</a></label>
                             <div class="col-sm-7">
-                            <textarea class="form-control" id="customorderNote" placeholder="Address"></textarea>
+                                <input type="text" class="form-control" id="customorderHargaFinal" value="0" placeholder="(Rp.)">
                             </div>
                         </div>
                     </div>
@@ -199,18 +188,18 @@
                 <div class="row form-horizontal">
                     <div class="col-sm-6">
                         <div class="form-group row">
-                        <label class="col-sm-4 col-form-label" for="customorderHargaFinal">Image<a style="color:red;">*</a></label>
-                            <div class="col-sm-7">
-                                <input type="file" id="file" onchange="fileValidation()" class="form-control" >
-                            </div>
+                            <label class="col-sm-4 col-form-label" for="customorderNote">Note<a style="color:red;">*</a></label>
+                                <div class="col-sm-7">
+                                <textarea class="form-control" id="customorderNote" placeholder="Address"></textarea>
+                                </div>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                    <div class="form-group row">
-                        <div class="col-sm-1"></div>
-                        <label class="col-sm-4 col-form-label"></label>
+                        <div class="form-group row">
+                            <div class="col-sm-1"></div>
+                            <label class="col-sm-4 col-form-label" for="downpayment">Downpayment</label>
                             <div class="col-sm-7">
-
+                                <input type="number" min="0" value="0" class="form-control" id="downpayment" placeholder="Downpayment">
                             </div>
                         </div>
                     </div>

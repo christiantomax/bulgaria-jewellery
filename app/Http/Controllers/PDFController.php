@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use PDF;
 
 class PDFController extends Controller
@@ -13,18 +14,19 @@ class PDFController extends Controller
         $so = DB::select("SELECT sd_trxsos.KodeSO, sd_trxsos.NamaUserCreator, sd_mastercustomers.Nama, sd_mastercustomers.Telepon, sd_masterarticles.*, sd_masterarticleimages.Path, sd_trxsos.HargaFinal
         FROM sd_trxsos, sd_masterarticles, sd_masterarticleimages, sd_mastercustomers WHERE
         sd_trxsos.IDArticle = sd_masterarticles.IDArticle AND
-        sd_masterarticles.IDArticle = sd_masterarticleimages.id AND
+        sd_masterarticles.IDArticle = sd_masterarticleimages.IDArticle AND
         sd_mastercustomers.IDCustomer = sd_trxsos.IDCustomer AND
         sd_trxsos.KodeSO = '".$request->kodeSO."'");
-
-        if (count($so) == 1) {
+        
+        if (count($so) >= 1) {
             $so = $so[0];
             $time = strtotime($so->created_at);
             $so->created_at = date('d M Y',$time);
             $so->HargaFinalTerbilang = $this->terbilang($so->HargaFinal)." Rupiah";
             $so->HargaFinal = 'Rp. '.strrev(implode('.',str_split(strrev(strval($so->HargaFinal)),3))).',00';
             $data = [
-                'data' => $so
+                'data' => $so,
+                'tanggal' => Carbon::now()->isoFormat('D MMM Y'),
             ];
             // return view('print.SO', $data);
             $pdf = PDF::loadView('print.SO', $data)->setPaper('a5', 'landscape');
@@ -49,18 +51,31 @@ class PDFController extends Controller
         return $pdf->download('itsolutionstuff.pdf');
     }
 
-    public function generatePDFCertificate()
+    public function generatePDFCertificate(Request $request)
     {
-        $data = [
-            'title' => 'Welcome to ItSolutionStuff.com',
-            'date' => date('m/d/Y')
-        ];
+        $so = DB::select("SELECT sd_trxsos.KodeSO, sd_trxsos.NamaUserCreator, sd_mastercustomers.Nama, sd_mastercustomers.Telepon, sd_masterarticles.*, sd_masterarticleimages.Path, sd_trxsos.HargaFinal
+        FROM sd_trxsos, sd_masterarticles, sd_masterarticleimages, sd_mastercustomers WHERE
+        sd_trxsos.IDArticle = sd_masterarticles.IDArticle AND
+        sd_masterarticles.IDArticle = sd_masterarticleimages.IDArticle AND
+        sd_mastercustomers.IDCustomer = sd_trxsos.IDCustomer AND
+        sd_trxsos.KodeSO = '".$request->kodeSO."'");
 
-        // return view('print.certificate');
-        $pdf = PDF::loadView('print.certificate', $data)->setPaper('a5', 'potrait');
-        $pdf->render();
-        return $pdf->stream();
-        return $pdf->download('itsolutionstuff.pdf');
+        if (count($so) >= 1) {
+            $so = $so[0];
+            $time = strtotime($so->created_at);
+            $so->created_at = date('d M Y',$time);
+            $so->HargaFinalTerbilang = $this->terbilang($so->HargaFinal)." Rupiah";
+            $so->HargaFinal = 'Rp. '.strrev(implode('.',str_split(strrev(strval($so->HargaFinal)),3))).',00';
+            $data = [
+                'data' => $so
+            ];
+            // return view('print.certificate', $data);
+            $pdf = PDF::loadView('print.certificate', $data)->setPaper('a5', 'potrait');
+            $pdf->render();
+            return $pdf->stream();
+        }else {
+            return "unknown or something went wrong";
+        }
     }
 
     public function generatePDFCO(Request $request)

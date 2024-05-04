@@ -26,7 +26,7 @@ class sdTrxpo extends Model
 
     public function getPOnow(){
         return DB::select("SELECT po.IDPO, CONCAT(supplier.IDSupplier,' ',supplier.Nama) as Supplier, format(sum(po.harga),0) as TotalPurchasePriceDollar, format(sum(po.harga*po.ExchangeRate),0) as TotalPurchasePriceRupiah, po.ExchangeRate, DATE_FORMAT(po.TglJatuhTempo, '%a, %d %b %Y') as TglJatuhTempo, DATE_FORMAT(po.created_at, '%a, %d %b %Y') as created_at, users.NamaUser,
-        po.NotaSupplier, po.KodeBarangSupplier as users from sd_trxpos po
+        po.NotaSupplier, po.KodeBarangSupplier, users.NamaUser as users from sd_trxpos po
         join sd_mastersuppliers supplier on po.IDSupplier = supplier.id
         join users users on po.IDUser = users.id
         WHERE MONTH(po.created_at) = MONTH(NOW()) AND YEAR(po.created_at) = YEAR(NOW())

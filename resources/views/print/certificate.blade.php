@@ -4,7 +4,7 @@
 <head>
     <style>
         html, body{
-            margin: 12px;
+            margin: 5px;
         }
         *{
             font-size: 10px;
@@ -73,18 +73,19 @@
     <table class="table">
         <tr style="padding-top: 2px;" >
             <td colspan="4" class="text-left" style="padding: 10px 30px 5px 30px; position: relative;">
-                <img src="{{ public_path('/storage/uploads/images/Logo.JPG') }}" style="height: 50px; margin: 15px 0px 5px 58px">
+                <img src="{{ public_path('/storage/uploads/images/Logo.JPG') }}" style="height: 50px; margin: 15px 0px 5px 80px">
                 <p style="font-weight: 700; font-size: 20px; text-align: center; margin: 0 0 0 0; padding: 0 0 0 0;">
                     Certificate of Authenticity
                 </p>
-                <img src="{{ public_path('/storage/uploads/images/frame-piece-top-right.jpg') }}" style="right: 0; top: 0px; height: 100px; position: absolute; z-index: -1;">
-                <img src="{{ public_path('/storage/uploads/images/frame-piece-top-left.jpg') }}" style="left: 2px; top: 0px; height: 100px; position: absolute; z-index: -999;">
-                <img src="{{ public_path('/storage/uploads/images/frame-piece-bottom-right.jpg') }}" style="bottom:-700px; right: 0;height: 100px; position: absolute; z-index: -1;">
-                <img src="{{ public_path('/storage/uploads/images/frame-piece-bottom-left.jpg') }}" style="left: 2px; bottom: -700px; height: 100px; position: absolute; z-index: -1;">
+                <img src="{{ public_path('/storage/uploads/images/frame-piece-top-right.jpg') }}" style="right: 2px; top: 3px; height: 100px; position: absolute; z-index: -1;">
+                <img src="{{ public_path('/storage/uploads/images/frame-piece-top-left.jpg') }}" style="left: 2px; top: 3px; height: 100px; position: absolute; z-index: -999;">
+                <img src="{{ public_path('/storage/uploads/images/frame-piece-bottom-right.jpg') }}" style="bottom:-730px; right: 2px;height: 100px; position: absolute; z-index: -1;">
+                <img src="{{ public_path('/storage/uploads/images/frame-piece-bottom-left.jpg') }}" style="left: 2px; bottom: -730px; height: 100px; position: absolute; z-index: -1;">
                 <div style="width: 100%; display:flex; justify-content: center; text-align: center; z-index:;">
-                    <img src="{{ public_path('/storage/uploads/images/dummy-product.jpg') }}" style="height: 180px; margin: 35px 0px;">
+                    <img src="{{ public_path($data->Path) }}" style="height: 150px; margin: 35px 0px;">
                 </div>
                 <div style="width: 100%; display:flex; justify-content: start; text-align: left;">
+                    <p style="font-size: 13px; text-align:center;">{{ $data->NamaArticle }}<br>{{ $data->Karat }}</p>
                     <p class="gold" style="font-weight: 700; font-size: 17px; text-align: left; margin: 0 0 0 0; padding: 0 0 0 0;">Clarity Grade</p>
                     <table style="margin: 5px 0px 20px 0; padding: 0;">
                         <tr>

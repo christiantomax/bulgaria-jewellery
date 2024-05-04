@@ -22,6 +22,20 @@
             </div>
             <div class="col-4"></div>
             <div class="col-3" style="margin-left: auto;">
+                <a href="" id="sertif" target="_blank">
+                    <button class="btn btn-block btn-warning">
+                        <b><i class="fas fa-print"></i>&nbsp Print Certificate</b>
+                    </button>
+                </a>
+            </div>
+            <div class="col-3" style="margin-left: auto;">
+                <a href="" id="print" target="_blank">
+                    <button class="btn btn-block bg-gradient-info">
+                        <b><i class="fas fa-print"></i>&nbsp Print Invoice</b></button>
+                    </button>
+                </a>
+            </div>
+            {{-- <div class="col-3" style="margin-left: auto;">
                 <a href={{"/generate-pdf-co/".$datacoheader[0]->IDSO}}>
                     <button id="print" type="submit" class="btn btn-block bg-gradient-info" formtarget="_blank"><b>
                     <i class="fas fa-print"></i>&nbsp Print Certificate</b>
@@ -34,7 +48,7 @@
                     <i class="fas fa-print"></i>&nbsp Print Invoice</b>
                     </button>
                 </a>
-            </div>
+            </div> --}}
         </div>
 
 <br><section class="content">
@@ -505,6 +519,9 @@
                     $('#sono').val(JSON.stringify(data).split('"').join(''));
                     $('#nososertif').val($('#sono').val());
                     $('#nosoinv').val($('#sono').val());
+
+                    $("#sertif").attr('href', '/generate-pdf-certificate/'+$('#sono').val());
+                    $("#print").attr('href', '/generate-pdf-so/'+$('#sono').val());
 
                     $('#create-scd').modal('show');
                 }

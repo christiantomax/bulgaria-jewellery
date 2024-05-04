@@ -92,6 +92,12 @@
                             <input class="form-control" type="text" value="{{ $datart->Kode}} - {{ $datart->NamaSupplier }}" disabled>
                         </div>
                     </div>
+                    <div class="form-group row" style="margin-right: 2%;">
+                        <label class="col-4 col-form-label">Kode Barang Supplier</label>
+                        <div class="col-8">
+                            <input class="form-control" type="text" value="{{ $datapo[0]->KodeBarangSupplier}}" disabled>
+                        </div>
+                    </div>
                     <div class="form-group row">
                         <label class="col-12 col-form-label">Note</label>
                         <div class="col-12">

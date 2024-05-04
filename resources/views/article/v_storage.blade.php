@@ -33,7 +33,7 @@
                                 <select class="form-control select2bs4" id="storage" name="storage" style="width : 100%;">
                                         <option value="all">-- All Allocation --</option>
                                     @foreach($datatype as $row)
-                                        <option value="{{ $row->IDZAlloc }}" {{  $post != '' ? ($post->storage == $row->IDZAlloc ? 'selected' : '') : '' }}>
+                                        <option value="{{ $row->IDZAlloc }}" {{  $post != '' ? ($post->storage == $row->IDZAlloc ? 'selected' : '') : ($row->IDZAlloc == 2 ? 'selected' : '') }}>
                                             {{ $row->KodeAlloc }} - {{ $row->NamaAlloc }}</option>
                                     @endforeach
                                 </select><br>
@@ -83,8 +83,9 @@
                                 <th style="width: 5%;">No</th>
                                 <th style="width: 20%;">Item Code</th>
                                 <th style="width: 30%;">Item Name</th>
-                                <th style="width: 20%;">Gold Weight</th>
-                                <th style="width: 20%;">Gold Carat</th>
+                                <th style="width: 5%;">Gold Weight</th>
+                                <th style="width: 15%;">Gold Carat</th>
+                                <th style="width: 20%;">Image</th>
                                 <th style="width: 5%;">View</th>
                             </tr>
                         </thead>
@@ -96,6 +97,9 @@
                                 <td>{{ $row->NamaArticle }}</td>
                                 <td>{{ $row->BeratEmas }}</td>
                                 <td>{!! preg_replace("/\r\n|\r|\n/", '<br>', $row->Karat) !!}</td>
+                                <td>
+                                    <img id="preview" src="{{ $row->path }}" alt="preview image" style="max-width: 100%;">
+                                </td>
                                 <td><a href="article/list/{{ $row->KodeArticle }}" class="btn btn-primary"><i class="fas fa-eye"></i></a></td>
                             </tr>
                             @endforeach

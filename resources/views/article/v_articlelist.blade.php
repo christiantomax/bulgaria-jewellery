@@ -30,14 +30,11 @@
                 <br><div class="row">
                     <div class="col-12"><label>Item Types</label></div>
                     <div class="col-4">
-                        <select class="form-control select2bs4" name="artype" style="width : 100%;">
+                        <select class="form-control select2bs4" name="artype" style="width : 100%;" onchange="this.form.submit()">
                             @foreach($datartype as $row)
                                 <option value="{{ $row->IDArticleType }}" {{ $idtype != '' ? ($idtype == $row->IDArticleType ? 'selected' : '') : '' }}>{{ $row->KodeAwal }} - {{ $row->NamaJenisArticle }}</option>
                             @endforeach
                         </select>
-                    </div>
-                    <div class="col-2">
-                        <button type="submit" class="btn btn-block btn-primary"><b>View</b></button>
                     </div>
                 </div>
                 </form><br>
@@ -114,6 +111,9 @@
             "info": true,
             "autoWidth": false,
             "responsive": true,
+            "destroy": true,
+            "lengthMenu": [5, 10, 25, 50, 75, 100],
+            // dom: 'fprtip',
         });
     })
 

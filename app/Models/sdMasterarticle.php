@@ -32,8 +32,14 @@ class sdMasterarticle extends Model
 
     public function getArticleByAlloc($idalloc){
         if($idalloc == "all")
-            return DB::select("SELECT * FROM sd_masterarticles");
-        return DB::select("SELECT * FROM sd_masterarticles WHERE IDZAlloc = ".$idalloc);
+            return DB::select("SELECT a.*, b.path as 'path' FROM sd_masterarticles a
+                                join sd_masterarticleimages b on a.IDArticle = b.IDArticle
+                                ORDER BY IDArticle");
+        // return DB::select("SELECT * FROM sd_masterarticles WHERE IDZAlloc = ".$idalloc);
+        return DB::select("SELECT a.*, b.path as 'path' FROM sd_masterarticles a
+                        join sd_masterarticleimages b on a.IDArticle = b.IDArticle
+                        WHERE IDZAlloc = ".$idalloc."
+                        ORDER BY IDArticle");
     }
 
     // Untuk Detail Article No FIlter (Mutation)
