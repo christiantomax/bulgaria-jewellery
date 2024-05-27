@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\sdMastercustomer;
 use App\Models\sdMasterarticle;
-use App\Models\sdTrxBuyBack;
+use App\Models\sdTrxbuyback;
 use App\Models\sdTrxso;
 use Carbon\Carbon;
 
@@ -14,7 +14,7 @@ class BBController extends Controller
 {
     public function index(){
         $userModel = new User;
-        $bbModel = new sdTrxBuyBack;
+        $bbModel = new sdTrxbuyback;
         $databb = [
             'user' => $userModel->getUserAll(),
             'databb' => '',
@@ -26,7 +26,7 @@ class BBController extends Controller
 
     public function indexPostBB(Request $req){
         $userModel = new User;
-        $bbModel = new sdTrxBuyBack;
+        $bbModel = new sdTrxbuyback;
         $databb = [
             'user' => $userModel->getUserAll(),
             'databb' => $bbModel->getBBFilter($req['bbno'], $req['bbdate1'], $req['bbdate2'],
@@ -38,7 +38,7 @@ class BBController extends Controller
     }
 
     public function updateBB($idbb){
-        $bbModel = new sdTrxBuyBack;
+        $bbModel = new sdTrxbuyback;
         $data = $bbModel->getBBByID($idbb);
 
         if(count($data) == 0)
@@ -52,7 +52,7 @@ class BBController extends Controller
     }
 
     public function updateBBPost(Request $req){
-        $bbModel = new sdTrxBuyBack;
+        $bbModel = new sdTrxbuyback;
         return $bbModel->updateBB($req);
     }
 

@@ -55,7 +55,7 @@
     <table>
         <tr>
             <th colspan="2" rowspan="2" style="border: 0;">
-                <img src="{{ public_path('/storage/uploads/images/Logo.JPG') }}" style="height: 70px; margin: 5px 0px">
+                <img src="{{ public_path('/storage/uploads/images/Logo.jpg') }}" style="height: 70px; margin: 5px 0px">
             </th>
             <th colspan="3" style="padding: 2px 10px 2px 10px; border: 0; text-align: right; font-size: 13px;">
                 <p style="text-align: right: margin: 0; padding: 0; color: #00008B; font-size: 15px;">INVOICE</p>

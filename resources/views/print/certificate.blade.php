@@ -73,7 +73,7 @@
     <table class="table">
         <tr style="padding-top: 2px;" >
             <td colspan="4" class="text-left" style="padding: 10px 30px 5px 30px; position: relative;">
-                <img src="{{ public_path('/storage/uploads/images/Logo.JPG') }}" style="height: 50px; margin: 15px 0px 5px 80px">
+                <img src="{{ public_path('/storage/uploads/images/Logo.jpg') }}" style="height: 50px; margin: 15px 0px 5px 80px">
                 <p style="font-weight: 700; font-size: 20px; text-align: center; margin: 0 0 0 0; padding: 0 0 0 0;">
                     Certificate of Authenticity
                 </p>
