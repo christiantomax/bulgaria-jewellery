@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -101,7 +102,8 @@ class sdTrxBuyBack extends Model
         $nos = $nos_model->returnNoBB('B',$bbdate,'Buy Back');
         
         try {
-            $this::create([
+            DB::beginTransaction();
+            DB::table('sd_trxbuybacks')->insert([
                 'KodeBB' => $nos,
                 'KodeSO' => $req['sono'],
                 'IDUserCreator' => Auth::user()->id,
@@ -120,7 +122,7 @@ class sdTrxBuyBack extends Model
             ]);
             $nos_model->returnNoBBUpdate('B',$bbdate);
 
-            $soModel::where('KodeSO', $req['sono'])
+            $soModel = sdTrxso::where('KodeSO', $req['sono'])
                     ->update([
                         'KodeBB' => $nos,
                         'IDUserUpdater' => Auth::user()->id,
@@ -138,9 +140,11 @@ class sdTrxBuyBack extends Model
                 DB::update("UPDATE sd_masterarticles SET Buyback = 1 WHERE KodeArticle = '".$datart[0]->KodeArticle."'");
             }
 
+            DB::commit();
             return $nos;
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            return 'error';
+        } catch(Exception $e){
+            DB::rollBack();
+            echo 'Message: ' .$e->getMessage();
         }
     }
 
