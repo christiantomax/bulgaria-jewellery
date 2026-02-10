@@ -34,15 +34,21 @@ class sdMasterzalloc extends Model
     }
 
     public function getSummary($idalloc){
-        if($idalloc == "all")
-            return DB::select("SELECT atp.IDArticleType, atp.KodeAwal, atp.NamaJenisArticle, COUNT(ma.IDArticleType) Jumlah
-                FROM sd_articletypes atp JOIN sd_masterarticles ma ON (atp.IDArticleType = ma.IDArticleType)
-                GROUP BY atp.IDArticleType, atp.KodeAwal, atp.NamaJenisArticle");
-        return DB::select("SELECT atp.IDArticleType, atp.KodeAwal, atp.NamaJenisArticle, COUNT(ma.IDArticleType) Jumlah
-            FROM sd_articletypes atp JOIN sd_masterarticles ma ON (atp.IDArticleType = ma.IDArticleType)
+        if($idalloc == "all") {
+            return DB::select("SELECT atp.IDArticleType, atp.KodeAwal, atp.NamaJenisArticle, COUNT(ma.IDArticleType) as Jumlah
+                FROM sd_articletypes atp
+                JOIN sd_masterarticles ma ON atp.IDArticleType = ma.IDArticleType
+                GROUP BY atp.IDArticleType, atp.KodeAwal, atp.NamaJenisArticle
+                ORDER BY atp.Urutan");
+        }
+        return DB::select("SELECT atp.IDArticleType, atp.KodeAwal, atp.NamaJenisArticle, COUNT(ma.IDArticleType) as Jumlah
+            FROM sd_articletypes atp
+            JOIN sd_masterarticles ma ON atp.IDArticleType = ma.IDArticleType
             WHERE ma.IDZAlloc = ?
-            GROUP BY atp.IDArticleType, atp.KodeAwal, atp.NamaJenisArticle",[$idalloc]);
+            GROUP BY atp.IDArticleType, atp.KodeAwal, atp.NamaJenisArticle
+            ORDER BY atp.Urutan", [$idalloc]);
     }
+
 
     public function delAlloc($req){
         try {

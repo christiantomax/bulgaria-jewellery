@@ -303,7 +303,6 @@
                 }else{
                     $('#update-validation').modal('hide');
                     $('#update-scd').modal('show');
-                    refresh();
                 }
            }
         });
