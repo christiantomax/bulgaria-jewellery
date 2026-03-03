@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Models\sdNoseries;
 
 
@@ -80,17 +81,49 @@ class sdMasterarticle extends Model
 
     public function createArticleMaster($req){
         $nos_model = new sdNoseries;
-        $nos = '';
-        $nos = $nos_model->returnNoArticle($req->articletype);
-
-        try {
-            DB::insert("insert into `sd_masterarticles`(`IDArticle`, `IDSupplier`, `IDZAlloc`, `IDArticleType`, `KodeArticle`, `NamaArticle`, `BeratEmas`, `Karat`, `SellingPrice`, `Block`, `Buyback`, `Note`, `created_at`, `updated_at`) VALUES (NULL,'".$req['idsupplier']."','".$req['articleallocation']."','".$req['articletypeid']."','".$nos."','".$req['articlename']."','".$req['articleweight']."','".$req['articlekarat']."','".$req['articlepurchaseprice']."',0, 0, '-','".NOW()."',NULL)");
-                return $nos;
-        } catch(\Illuminate\Database\QueryException  $ex){
-            $nos_model->returnNoTglCancel($req->articletype);
-            return 'error';
-            // return $ex->getMessage();
+        $berat = preg_replace('/[^0-9,.\-]/', '', (string)$req['articleweight']);
+        $berat = str_replace(',', '.', $berat);
+        if($berat === '' || $berat === null){
+            $berat = 0;
         }
+
+        $maxTry = 50;
+        for($i = 0; $i < $maxTry; $i++){
+            $nos = $nos_model->returnNoArticle($req->articletype);
+            try {
+                DB::insert("insert into `sd_masterarticles`(`IDArticle`, `IDSupplier`, `IDZAlloc`, `IDArticleType`, `KodeArticle`, `NamaArticle`, `BeratEmas`, `Karat`, `SellingPrice`, `Block`, `Buyback`, `Note`, `created_at`, `updated_at`) VALUES (NULL,?,?,?,?,?,?,?,?,0,0,'-',NOW(),NULL)", [
+                    $req['idsupplier'],
+                    $req['articleallocation'],
+                    $req['articletypeid'],
+                    $nos,
+                    $req['articlename'],
+                    $berat,
+                    $req['articlekarat'],
+                    $req['articlepurchaseprice'],
+                ]);
+                return $nos;
+            } catch(\Illuminate\Database\QueryException  $ex){
+                $isDuplicateKodeArticle = isset($ex->errorInfo[1]) && (int)$ex->errorInfo[1] === 1062;
+                if($isDuplicateKodeArticle){
+                    // Jika kode article sudah ada, lanjut ambil no series berikutnya.
+                    continue;
+                }
+
+                Log::error('Create master article gagal', [
+                    'kode_article' => $nos,
+                    'idsupplier' => $req['idsupplier'] ?? null,
+                    'articletypeid' => $req['articletypeid'] ?? null,
+                    'message' => $ex->getMessage(),
+                ]);
+                return 'error';
+            }
+        }
+
+        Log::error('Create master article gagal: no series habis/duplikat berulang', [
+            'idsupplier' => $req['idsupplier'] ?? null,
+            'articletypeid' => $req['articletypeid'] ?? null,
+        ]);
+        return 'error';
     }
 
     protected $fillable = [

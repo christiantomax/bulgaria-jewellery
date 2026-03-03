@@ -30,7 +30,7 @@
         <div class="card-header">
             <div class="row">
                 <h2 class="card-title col-9" style="display: flex; align-items: center;"><b>Add New Purchase Order</b></h2>
-                <div class="col-3"><button onclick="refresh()" class="btn btn-block btn-success"><b>New Purchase Order</b></button></div>
+                <div class="col-3"><button type="button" onclick="refresh()" class="btn btn-block btn-success"><b>New Purchase Order</b></button></div>
             </div>
         </div>
         <div class="card-body">
@@ -97,7 +97,7 @@
                     <div class="col-sm-1"></div>
                     <label class="col-sm-4 col-form-label" for=""></label>
                         <div class="col-sm-7">   
-                            <button id="addnewarticle" onclick="showaddnewarticle()" class="btn btn-block btn-primary"><b>Add Article</b></button>
+                            <button type="button" id="addnewarticle" onclick="showaddnewarticle()" class="btn btn-block btn-primary"><b>Add Article</b></button>
                         </div>
                     </div>
                 </div>
@@ -198,7 +198,7 @@
                                     <span>ct</span>
                                 </div>
                                 <div class="col-sm-2">
-                                    <button class="btn btn-primary" style="width:100%;" onclick="setKarat()">+</button>
+                                    <button type="button" class="btn btn-primary" style="width:100%;" onclick="setKarat()">+</button>
                                 </div>
                         </div>
                         <div class="form-group row">
@@ -213,7 +213,7 @@
                 <div class="row">
                     <div class="col-sm-9"></div>
                     <div class="col-sm-3">
-                        <button id="addRow" class="btn btn-block btn-primary"><b>Add Article</b></button>
+                        <button type="button" id="addRow" class="btn btn-block btn-primary"><b>Add Article</b></button>
                     </div>
                 </div>
         </div>
@@ -225,7 +225,7 @@
     <br><div class="card elevation-2">
         <div class="card-header">
             <div class="row">
-                <div class="col-3"><button onclick="viewmodalpostdata()" id="simpanpo" class="btn btn-block btn-success" style="visibility: hidden;"><b>Simpan Purchase Order</b></button></div>
+                <div class="col-3"><button type="button" onclick="viewmodalpostdata()" id="simpanpo" class="btn btn-block btn-success" style="visibility: hidden;"><b>Simpan Purchase Order</b></button></div>
                 <div class="col-9"></div>
             </div>
         </div>
@@ -376,19 +376,25 @@
                 var strAllocation = e.options[e.selectedIndex].text;
                 var e = document.getElementById("articletype");
                 var strArticleType = e.options[e.selectedIndex].text;
+                if(!adddatapost(strArticleType, strAllocation)){
+                    return;
+                }
                 t.row.add( [
                     (counter+1),
-                    $('#articlename').val(),
-                    strArticleType,
-                    $('#articlepurchaseprice').val(),
-                    $('#articleweight').val(),
-                    $('#articlekarat').val(),
-                    $('#kodebarangsupplier').val(),
+                    datapost[counter]['articlename'],
+                    datapost[counter]['articletypedescription'],
+                    datapost[counter]['articlepurchaseprice'],
+                    datapost[counter]['articleweight'],
+                    datapost[counter]['articlekarat'],
+                    datapost[counter]['kodebarangsupplier'],
                     '<img src="" class="img-fluid" id="outputimage'+counter+'" style="max-height: 190px; width:200px; height: 200px; background-color: lightslategrey;">',
                     '<button class="btn btn-success" onclick="editdatapost('+counter+')"><i class="nav-icon fas fa-edit"></i></button>',
                     '<button class="btn btn-danger" onclick="deletedatapost('+counter+')"><i class="nav-icon fas fa-trash-alt"></i></button>',
                 ] ).draw( false );
-                adddatapost(strArticleType, strAllocation);
+                var image = document.getElementById('outputimage'+counter);
+                if(image && datapost[counter]['articleimage']){
+                    image.src = URL.createObjectURL(datapost[counter]['articleimage']);
+                }
                 counter++;
             }
             
@@ -397,6 +403,14 @@
     // '<button class="btn btn-info" id="image'+counter+'" onclick="setimagearticle('+counter+')"><i class="nav-icon fas fa-image"></i></button>',
                     
     function adddatapost(strArticleType, strAllocation){
+        var fileInput = document.getElementById('file');
+        var selectedFile = fileInput ? fileInput.files[0] : null;
+        if(!selectedFile){
+            $('#error-msg').html('Please check your article image');
+            $('#create-error').modal('show');
+            return false;
+        }
+
         datapost[counter] = {};
         datapost[counter]['articlename'] = $('#articlename').val();
         var e = document.getElementById("articletype");
@@ -408,12 +422,9 @@
         datapost[counter]['articleweight'] = $('#articleweight').val() + " gr";
         datapost[counter]['articlekarat'] = $('#articlekarat').val();
         datapost[counter]['kodebarangsupplier'] = $('#kodebarangsupplier').val();
-        datapost[counter]['articleimage'] = file.files[0];
+        datapost[counter]['articleimage'] = selectedFile;
 
         totalharga += (datapost[counter]['articlepurchaseprice']*$('#exchangerate').val());
-        
-        var image = document.getElementById('outputimage'+counter);
-        image.src = URL.createObjectURL(datapost[counter]['articleimage']);
 
         $('#file').val("");
         $('#articleweight').val("");
@@ -425,6 +436,7 @@
         
         document.getElementById('simpanpo').style.visibility = 'visible';
         document.getElementById("articletype").value = "select";
+        return true;
     }
 
     function deletedatapost(request){
@@ -464,7 +476,9 @@
         var image = null;
         for (var i = 0; i < counter; i++) {
             image = document.getElementById('outputimage'+i);
-            image.src = URL.createObjectURL(datapost[i]['articleimage']);
+            if(image && datapost[i]['articleimage']){
+                image.src = URL.createObjectURL(datapost[i]['articleimage']);
+            }
         }
     }
 
@@ -545,7 +559,10 @@
         }else{
             $('#collapseaddnewarticle').collapse("show");
             document.getElementById('addnewarticle').style.visibility = 'hidden';
-            document.getElementById('purchaseorderheader').remove();
+            var poHeader = document.getElementById('purchaseorderheader');
+            if (poHeader) {
+                poHeader.remove();
+            }
             document.getElementById('simpanpo').style.visibility = 'visible';
             
             $('#idsupplier').prop('disabled', true);

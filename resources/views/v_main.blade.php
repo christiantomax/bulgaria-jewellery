@@ -40,11 +40,11 @@
     <script src="{{ asset('template/plugins/jquery/jquery.min.js') }}"></script>
     <!-- jQuery UI 1.11.4 -->
     <script src="{{ asset('template/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
-    <!-- Ajax -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
     <script>
-    $.widget.bridge('uibutton', $.ui.button)
+    if ($.ui && $.ui.button) {
+      $.widget.bridge('uibutton', $.ui.button)
+    }
     </script>
     <!-- Bootstrap 4 -->
     <script src="{{ asset('template/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
@@ -68,10 +68,6 @@
     <script src="{{ asset('template/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('template/dist/js/adminlte.js') }}"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="{{ asset('template/dist/js/demo.js') }}"></script>
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="{{ asset('template/dist/js/pages/dashboard.js') }}"></script>
     <!-- DataTable -->
     <script src="{{ asset('template/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('template/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
@@ -86,8 +82,6 @@
     <script src="{{ asset('template/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
     <script src="{{ asset('template/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
     <script src="{{ asset('template/plugins/select2/js/select2.full.min.js') }}"></script>
-    <!-- Select2 -->
-    <script src="{{ asset('template/plugins/plugins/select2/js/select2.full.min.js') }}"></script>
     <!-- Icon -->
     <link rel="shortcut icon" href="{{ asset('template/dist/img/Logo.png') }}">
 </head>

@@ -161,6 +161,30 @@ class sdNoseries extends Model
         return $nos;
     }
 
+    public function returnNoByKode($kode, $keterangan = ''){
+        $nos = '';
+        $today = date("ymd");
+        $now = date("Y-m-d");
+        $nos_db = DB::select("SELECT * FROM sd_noseries WHERE KodeNos = ? and TanggalAkhir >= ?", [$kode, $now]);
+
+        if(count($nos_db) != 0){
+            $urutan = str_pad($nos_db[0]->Urutan+1, 5, "0", STR_PAD_LEFT);
+            $nos = $kode."-".$today."-".$urutan;
+
+            DB::update("UPDATE sd_noseries SET Urutan = ?, updated_at = NOW() WHERE KodeNos = ? AND TanggalAkhir >= ?",
+            [$nos_db[0]->Urutan+1, $kode, $now]);
+        }else{
+            if($keterangan == ''){
+                $keterangan = $kode." (Auto Generated)";
+            }
+
+            DB::insert("INSERT INTO `sd_noseries`(`IDNos`, `KodeToko`, `KodeNos`, `Urutan`, `Keterangan`, `TanggalMulai`, `TanggalAkhir`, `created_at`, `updated_at`) VALUES 
+                (NULL,'01',?,1,?,?,?,NOW(),NOW())",[$kode, $keterangan, date("Y-m-01"), date("Y-m-t")]);
+            $nos = $kode."-".$today."-".str_pad(1, 5, "0", STR_PAD_LEFT);
+        }
+        return $nos;
+    }
+
     public function returnNoCO($kode){
         $nos = '';
         $today = date("ymd"); 

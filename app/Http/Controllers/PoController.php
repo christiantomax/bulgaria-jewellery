@@ -8,6 +8,9 @@ use App\Models\sdMasterzalloc;
 use App\Models\sdMasterarticle;
 use App\Models\sdNoseries;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use Carbon\Carbon;
 
@@ -55,31 +58,46 @@ class PoController extends Controller
     }
 
     public function createpo(Request $request){
+        $path = null;
         try {
-            $feedback = array();
             $idpo = $request->idpo;
             $noseries = new sdNoseries;
             $id = $noseries->returnUserId();
 
+            DB::beginTransaction();
+
             $ArticleModel = new sdMasterarticle;
             $namafile = $ArticleModel->createArticleMaster($request);
+            if($namafile === 'error'){
+                throw new \Exception('Gagal membuat master article');
+            }
             $idarticle = $ArticleModel->getArticleByKodeArticle($namafile);
+            if(count($idarticle) == 0){
+                throw new \Exception('Article tidak ditemukan setelah create');
+            }
 
             $image = new sdMasterarticleimage;
             if ($request->file('file')) {
                 $imagePath = $request->file('file');
-                $imageName = $imagePath->getClientOriginalName();
+                $maxTry = 50;
+                $counterTry = 0;
+                do {
+                    $counterTry++;
+                    $imageName = $noseries->returnNoByKode("POI", "POI (Purchase Order Image)").".".$imagePath->extension();
+                    $path = "uploads/purchaseorder/".$imageName;
+                    if($counterTry > $maxTry){
+                        throw new \Exception('Tidak bisa mendapatkan nama image unik dari no series');
+                    }
+                } while(Storage::disk('public')->exists($path));
 
-                $path = $request->file('file')->storeAs('uploads/purchaseorder', $namafile.".".$imagePath->extension(), 'public');
+                $request->file('file')->storeAs('uploads/purchaseorder', $imageName, 'public');
             }
             else{
-                $feedback['idpo'] = "error";
-                $feedback['articlekode'] = "error";
-                return response()->json($feedback);
+                throw new \Exception('File image wajib diisi');
             }
 
             $image->IDArticle = $idarticle[0]->IDArticle;
-            $image->Name = $namafile.".".$imagePath->extension();
+            $image->Name = $imageName;
             $image->Path = '/storage/'.$path;
             $image->Note = '';
             $image->IDUser = $id;
@@ -97,7 +115,7 @@ class PoController extends Controller
             $purchaseorder->ExchangeRate = $request->exchangerate;
             
             if($tanggal[0] == ''){
-                $purchaseorder->TglJatuhTempo = '';
+                $purchaseorder->TglJatuhTempo = null;
             }else{
                 $purchaseorder->TglJatuhTempo = $tanggal[2]."-".$tanggal[1]."-".$tanggal[0];
             }
@@ -109,10 +127,19 @@ class PoController extends Controller
             
             $purchaseorder->save();
 
+            DB::commit();
             return 'berhasil';
 
         } catch (\Exception $e) {
-            return $e->getMessage();
+            DB::rollBack();
+            if($path){
+                Storage::disk('public')->delete($path);
+            }
+            Log::error('Create PO gagal', [
+                'idpo' => $request->idpo,
+                'idsupplier' => $request->idsupplier,
+                'message' => $e->getMessage(),
+            ]);
             return "error";
         }
 
