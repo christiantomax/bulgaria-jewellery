@@ -347,6 +347,14 @@
         document.getElementById("sertif").style.display = "none";
         document.getElementById("print").style.display = "none";
         $('#preview').hide();
+
+        // type="number" + step changes value on mouse wheel while focused (e.g. 10_000_000 -> 9_999_999.9)
+        var hf = document.getElementById('hargafinal');
+        if (hf) {
+            hf.addEventListener('wheel', function (e) {
+                if (document.activeElement === this) e.preventDefault();
+            }, { passive: false });
+        }
     });
 
     function refresh(){
